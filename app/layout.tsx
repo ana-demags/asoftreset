@@ -63,8 +63,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Figma capture script — remove when done */}
-        <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+        {/* Figma capture script — dev only so it doesn't slow production or first load */}
+        {process.env.NODE_ENV === "development" && (
+          <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async />
+        )}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${gambarino.variable} ${dmSans.variable} ${inter.variable} ${plusJakartaSans.variable} ${sora.variable} ${figtree.variable} antialiased`}

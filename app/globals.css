@@ -11,7 +11,7 @@
   --border-subtle: #e0ded9; /* very gentle warm silver */
   --surface-overlay: rgba(255, 255, 255, 0.7);
   /* Typescale: display + 3 headings + 1 body. Gambarino only. */
-  --text-display: clamp(3rem, 18vw, 16rem); /* 48px–256px, scales with viewport */
+  --text-display: clamp(3rem, 18vw, 12.5rem); /* 48px–200px, scales with viewport */
   --text-heading-1: 6rem;
   --text-heading-2: 4rem;
   --text-heading-3: 2.5rem;

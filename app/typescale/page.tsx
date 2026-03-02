@@ -79,7 +79,7 @@ export default function TypescalePage() {
               className="opacity-50 uppercase tracking-widest"
               style={{ fontSize: '0.75rem' }}
             >
-              Display · clamp(3rem, 18vw, 16rem) · 256px max · --text-display
+              Display · clamp(3rem, 18vw, 12.5rem) · 200px max · --text-display
             </span>
             <p
               className="tracking-tight"
