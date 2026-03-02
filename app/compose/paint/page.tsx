@@ -41,6 +41,8 @@ export default function PaintPage() {
   const [focusedShapeIndex, setFocusedShapeIndex] = useState(0);
   /** True when user has used keyboard on the canvas — show focus ring only then */
   const [keyboardModality, setKeyboardModality] = useState(false);
+  /** True when the canvas element has focus (tabbed to); hide dashed focus when blurred */
+  const [canvasFocused, setCanvasFocused] = useState(false);
   /** Reduced motion: skip fill reveal and sheet animation */
   const [reducedMotion, setReducedMotion] = useState(false);
   /** Fill reveal: shape id -> { colorIndex, startTime }; cleared when progress >= 1 or composition reset */
@@ -252,9 +254,9 @@ export default function PaintPage() {
       ctx.stroke(path);
     }
 
-    // Keyboard focus indicator: only for keyboard users (not when using pointer)
+    // Keyboard focus indicator: only when canvas has focus and user has used keyboard
     const total = shapes.length;
-    if (keyboardModality && total > 0 && focusedShapeIndex >= 0 && focusedShapeIndex <= total) {
+    if (canvasFocused && keyboardModality && total > 0 && focusedShapeIndex >= 0 && focusedShapeIndex <= total) {
       ctx.save();
       if (focusedShapeIndex < total && focusOrder[focusedShapeIndex] !== undefined) {
         const shapeIdx = focusOrder[focusedShapeIndex];
@@ -288,7 +290,7 @@ export default function PaintPage() {
     }
 
     ctx.restore();
-  }, [shapes, paths, shapeColorIndices, backgroundColor, palette, canvasSize, pal, focusedShapeIndex, focusOrder, keyboardModality, animationTick]);
+  }, [shapes, paths, shapeColorIndices, backgroundColor, palette, canvasSize, pal, focusedShapeIndex, focusOrder, keyboardModality, canvasFocused, animationTick]);
 
   function handlePointerDown() {
     setKeyboardModality(false);
@@ -390,6 +392,8 @@ export default function PaintPage() {
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
             onKeyDown={handleCanvasKeyDown}
+            onFocus={() => setCanvasFocused(true)}
+            onBlur={() => setCanvasFocused(false)}
             tabIndex={0}
             canvasStyle={{ touchAction: 'none', cursor: 'crosshair', display: 'block' }}
             aria-label={
