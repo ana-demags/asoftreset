@@ -17,8 +17,8 @@ export default function StartPage() {
         className="px-4 sm:px-6 pt-6 pb-2"
       />
       <div className="flex-1 flex items-start sm:items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
-        <div className="w-full max-w-md sm:max-w-none flex flex-col gap-6 sm:gap-10 items-center page-enter">
-        <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 justify-center items-center">
+        <div className="w-full max-w-md lg:max-w-none flex flex-col gap-6 lg:gap-10 items-center page-enter">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 justify-center items-center">
           <Button variant="card" onClick={() => router.push('/breathe')}>
             <div className="flex flex-col gap-3 w-full text-left">
               <h2
