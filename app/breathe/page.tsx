@@ -318,7 +318,7 @@ export default function BreathePage() {
                 lineHeight: 'var(--leading-body)',
               }}
             >
-              Complete a one-minute breathing exercise, allowing your mind settle into a calm state.
+              One minute to find your way back to calm.
             </p>
           </div>
         </header>

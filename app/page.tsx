@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="h-dvh w-full relative overflow-hidden" style={{ backgroundColor: 'var(--background)' }}>
       <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[calc(100%_-_48px)] sm:w-fit bg-white rounded-tl-[32px] rounded-tr-[32px] sm:rounded-tl-[56px] sm:rounded-tr-[56px] shadow-sm flex flex-col items-center gap-8 sm:gap-10 pt-20 pb-40 px-8 sm:px-24 page-enter"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[calc(100%_-_48px)] sm:w-fit bg-white rounded-tl-[32px] rounded-tr-[32px] sm:rounded-tl-[56px] sm:rounded-tr-[56px] shadow-sm flex flex-col items-center gap-8 sm:gap-10 pt-20 pb-[184px] px-8 sm:px-24 page-enter"
       >
         <h1
           className="whitespace-nowrap text-center"
@@ -31,9 +31,14 @@ export default function Home() {
         >
           Take a moment to welcome a sense of calm. Lean on short breathing exercises and puzzles designed to ease the mind.
         </p>
-        <Button onClick={() => router.push('/start')}>
-          Unwind
-        </Button>
+        <div className="flex flex-row gap-4">
+          <Button variant="secondary" onClick={() => router.push('/about')}>
+            About
+          </Button>
+          <Button onClick={() => router.push('/start')}>
+            Unwind
+          </Button>
+        </div>
       </div>
     </div>
   );

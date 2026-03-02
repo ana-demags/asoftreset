@@ -59,7 +59,7 @@ export default function ComposeSetupPage() {
           <div className="flex flex-col gap-4">
             <h1>Compose</h1>
             <p className="text-body w-full max-w-lg mx-auto lg:mx-0 min-w-0">
-              Paint fills flowing shapes with color. Weave threads bands over and under. Take a moment to create without pressure.
+              Take a moment to create without pressure.
             </p>
           </div>
         </header>
