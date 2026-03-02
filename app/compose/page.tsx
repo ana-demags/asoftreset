@@ -19,7 +19,7 @@ const COMPOSE_STYLES: Record<
   weave: {
     label: 'Weave',
     description:
-      'Connect horizontal bands over and under to reveal patterns.',
+      'Connect bands over and under to reveal patterns.',
   },
 };
 

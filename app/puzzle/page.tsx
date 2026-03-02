@@ -19,7 +19,7 @@ const PUZZLE_STYLES: Record<
   weave: {
     label: 'Weave',
     description:
-      'Connect horizontal bands over and under to reveal the pattern.',
+      'Connect bands over and under to reveal the pattern.',
   },
 };
 
