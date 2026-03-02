@@ -298,7 +298,7 @@ export default function BreathePage() {
           ]}
         />
       </div>
-      <div className="relative z-[1] flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-32 px-4 sm:px-6 py-6 sm:py-8 overflow-auto">
+      <div className="relative z-[1] flex-1 min-h-0 flex flex-col lg:flex-row items-start lg:items-center justify-start lg:justify-center gap-8 lg:gap-32 px-4 sm:px-6 pt-4 pb-6 sm:py-8 overflow-auto">
         <header
           className="flex flex-col w-full max-w-lg lg:max-w-[24rem] lg:min-w-0 lg:shrink text-center lg:text-left"
           style={{

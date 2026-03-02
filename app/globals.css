@@ -12,9 +12,9 @@
   --surface-overlay: rgba(255, 255, 255, 0.7);
   /* Typescale: display + 3 headings + 1 body. Gambarino only. */
   --text-display: clamp(3rem, 18vw, 12.5rem); /* 48px–200px, scales with viewport */
-  --text-heading-1: 6rem;
-  --text-heading-2: 4rem;
-  --text-heading-3: 2.5rem;
+  --text-heading-1: clamp(2.5rem, 8vw, 6rem); /* 40px–96px */
+  --text-heading-2: clamp(2rem, 5.5vw, 4rem); /* 32px–64px */
+  --text-heading-3: clamp(1.5rem, 3.5vw, 2.5rem); /* 24px–40px */
   --text-body: 1.25rem; /* 20px — body, links, buttons */
   --text-body-sm: 1rem; /* 16px — smaller body, captions, secondary text */
   --leading-display: 1;

@@ -29,7 +29,7 @@ export default function Breadcrumb({ items, className = '' }: BreadcrumbProps) {
       className={`shrink-0 ${className}`}
     >
       <ol
-        className="flex flex-wrap items-center gap-x-2 gap-y-1"
+        className="flex flex-wrap items-center justify-center sm:justify-start gap-x-2 gap-y-1"
         style={{
           fontSize: 'var(--text-body)',
           lineHeight: 'var(--leading-body)',

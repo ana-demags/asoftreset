@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="h-screen w-full relative overflow-hidden" style={{ backgroundColor: 'var(--background)' }}>
+    <div className="h-dvh w-full relative overflow-hidden" style={{ backgroundColor: 'var(--background)' }}>
       <div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[calc(100%_-_48px)] sm:w-fit bg-white rounded-tl-[32px] rounded-tr-[32px] sm:rounded-tl-[56px] sm:rounded-tr-[56px] shadow-sm flex flex-col items-center gap-8 sm:gap-10 pt-20 pb-40 px-8 sm:px-24 page-enter"
       >
