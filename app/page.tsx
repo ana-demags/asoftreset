@@ -31,11 +31,11 @@ export default function Home() {
         >
           Take a moment to welcome a sense of calm. Lean on short breathing exercises and puzzles designed to ease the mind.
         </p>
-        <div className="flex flex-row gap-4">
-          <Button variant="secondary" onClick={() => router.push('/about')}>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <Button variant="secondary" className="w-full sm:w-auto" onClick={() => router.push('/about')}>
             About
           </Button>
-          <Button onClick={() => router.push('/start')}>
+          <Button className="w-full sm:w-auto" onClick={() => router.push('/start')}>
             Unwind
           </Button>
         </div>
