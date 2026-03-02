@@ -31,7 +31,7 @@ export default function StartPage() {
               >
                 Breathe
               </h2>
-              <p className="text-body opacity-80 max-w-[20rem]">
+              <p className="text-body font-normal max-w-[20rem]">
                 A guided breathing practice to slow down and recenter.
               </p>
             </div>
@@ -48,7 +48,7 @@ export default function StartPage() {
               >
                 Compose
               </h2>
-              <p className="text-body opacity-80 max-w-[20rem]">
+              <p className="text-body font-normal max-w-[20rem]">
                 A rule-free yet defined space to color, weave, and rest.
               </p>
             </div>

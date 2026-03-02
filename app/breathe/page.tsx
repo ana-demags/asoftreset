@@ -298,7 +298,7 @@ export default function BreathePage() {
           ]}
         />
       </div>
-      <div className="relative z-[1] flex-1 min-h-0 flex flex-col lg:flex-row items-start lg:items-center justify-start lg:justify-center gap-8 lg:gap-32 px-4 sm:px-6 pt-4 pb-6 sm:py-8 overflow-auto">
+      <div className="relative z-[1] flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-start lg:justify-center gap-8 lg:gap-32 px-4 sm:px-6 pt-4 pb-6 sm:py-8 overflow-auto">
         <header
           className="flex flex-col w-full max-w-lg lg:max-w-[24rem] lg:min-w-0 lg:shrink text-center lg:text-left"
           style={{
@@ -312,7 +312,7 @@ export default function BreathePage() {
           <div className="flex flex-col gap-4">
             <h1>Breathe</h1>
             <p
-              className="w-full max-w-lg opacity-80 mx-auto lg:mx-0 min-w-0 text-body"
+              className="w-full max-w-lg mx-auto lg:mx-0 min-w-0 text-body"
               style={{
                 fontSize: 'var(--text-body)',
                 lineHeight: 'var(--leading-body)',
@@ -393,7 +393,7 @@ export default function BreathePage() {
                     {capitalizeLabel(breathingModes[mode].label)}
                   </h2>
                   <p
-                    className="min-w-0 opacity-80 break-words max-w-full"
+                    className="min-w-0 break-words max-w-full"
                     style={{
                       fontSize: 'var(--text-body)',
                       lineHeight: 'var(--leading-body)',
@@ -450,10 +450,10 @@ export default function BreathePage() {
                     lineHeight: 'var(--leading-tight)',
                   }}
                 >
-                  Nice work.
+                  Nice work
                 </h2>
                 <p
-                  className="min-w-0 opacity-80 break-words max-w-full"
+                  className="min-w-0 break-words max-w-full"
                   style={{
                     fontSize: 'var(--text-body)',
                     lineHeight: 'var(--leading-body)',

@@ -140,7 +140,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
           ...labelStyle,
           color: 'var(--text)',
           textDecorationColor: 'var(--text)',
-          opacity: selected ? 1 : 0.5,
           ...style,
         }}
         {...rest}

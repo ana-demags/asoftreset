@@ -51,14 +51,14 @@ export default function ComposeSetupPage() {
         className="px-4 sm:px-6 pt-6 pb-2"
       />
       <div
-        className="flex-1 min-h-0 flex flex-col lg:flex-row items-start lg:items-center justify-start lg:justify-center gap-8 lg:gap-32 px-4 sm:px-6 pt-4 pb-6 sm:py-8 overflow-auto"
+        className="flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-start lg:justify-center gap-8 lg:gap-32 px-4 sm:px-6 pt-4 pb-6 sm:py-8 overflow-auto"
       >
         <header
           className="flex flex-col w-full max-w-lg lg:max-w-[24rem] lg:min-w-0 lg:shrink text-center lg:text-left"
         >
           <div className="flex flex-col gap-4">
             <h1>Compose</h1>
-            <p className="text-body w-full max-w-lg opacity-80 mx-auto lg:mx-0 min-w-0">
+            <p className="text-body w-full max-w-lg mx-auto lg:mx-0 min-w-0">
               Paint fills flowing shapes with color. Weave threads bands over and under. Take a moment to create without pressure.
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function ComposeSetupPage() {
                 <h3 className="break-words">
                   {COMPOSE_STYLES[style].label}
                 </h3>
-                <p className="text-body min-w-0 opacity-80 break-words max-w-full">
+                <p className="text-body min-w-0 break-words max-w-full">
                   {COMPOSE_STYLES[style].description}
                 </p>
               </div>

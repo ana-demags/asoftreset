@@ -58,7 +58,7 @@ export default function PuzzleSetupPage() {
         >
           <div className="flex flex-col gap-4">
             <h1>Puzzle</h1>
-            <p className="text-body w-full max-w-lg opacity-80 mx-auto lg:mx-0 min-w-0">
+            <p className="text-body w-full max-w-lg mx-auto lg:mx-0 min-w-0">
               Pick paint or weave, then begin. A quiet space to focus and create.
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function PuzzleSetupPage() {
                 <h3 className="break-words">
                   {PUZZLE_STYLES[style].label}
                 </h3>
-                <p className="text-body min-w-0 opacity-80 break-words max-w-full">
+                <p className="text-body min-w-0 break-words max-w-full">
                   {PUZZLE_STYLES[style].description}
                 </p>
               </div>
