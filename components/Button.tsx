@@ -114,7 +114,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       <button
         ref={ref}
         type="button"
-        className={`h-[480px] w-[400px] flex flex-col justify-end items-start rounded-2xl p-6 shadow-sm hover:scale-[1.02] hover:shadow-lg motion-reduce:hover:scale-100 motion-reduce:hover:shadow-none ${focusRing} ${baseClass} ${className}`}
+        className={`card-padding min-h-0 w-full flex flex-col justify-end items-start rounded-2xl shadow-sm sm:w-[400px] sm:h-[480px] hover:scale-[1.02] hover:shadow-lg motion-reduce:hover:scale-100 motion-reduce:hover:shadow-none ${focusRing} ${baseClass} ${className}`}
         style={{
           backgroundColor: 'var(--surface-overlay)',
           color: 'var(--text)',

@@ -27,6 +27,13 @@
   --text-small: 1rem; /* 16px */
   --tracking-heading-2: -0.03em; /* tight for H2 */
   --tracking-body: -0.025em; /* tracking-tight for body (Figtree) */
+  /* Start page card padding: mobile first, then sm and up. Increase values to add more padding. */
+  --card-padding: 2rem;   /* 32px on mobile */
+}
+@media (min-width: 640px) {
+  :root {
+    --card-padding: 2.5rem; /* 40px on desktop */
+  }
 }
 
 @theme inline {
@@ -70,6 +77,16 @@ h1 {
   font-size: var(--text-heading-1);
   line-height: var(--leading-tight);
 }
+/* Start page card padding (Breathe / Compose). Increase values here to add more padding. */
+.card-padding {
+  padding: var(--card-padding, 1.5rem);
+}
+@media (min-width: 640px) {
+  .card-padding {
+    padding: var(--card-padding, 2.5rem);
+  }
+}
+
 /* Ensure headings inside buttons (e.g. start page cards) stay dark and large */
 button h1,
 button h2,

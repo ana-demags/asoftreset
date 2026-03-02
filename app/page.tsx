@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="h-screen w-full relative overflow-hidden" style={{ backgroundColor: 'var(--background)' }}>
       <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-fit bg-white rounded-tl-[56px] rounded-tr-[56px] shadow-sm flex flex-col items-center gap-10 pt-20 pb-40 px-24 page-enter"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[calc(100%_-_48px)] sm:w-fit bg-white rounded-tl-[32px] rounded-tr-[32px] sm:rounded-tl-[56px] sm:rounded-tr-[56px] shadow-sm flex flex-col items-center gap-8 sm:gap-10 pt-20 pb-40 px-8 sm:px-24 page-enter"
       >
         <h1
           className="whitespace-nowrap text-center"
@@ -23,7 +23,7 @@ export default function Home() {
           a soft reset
         </h1>
         <p
-          className="text-center max-w-lg"
+          className="text-center sm:max-w-xl"
           style={{
             fontSize: 'var(--text-body)',
             lineHeight: 'var(--leading-body)',
