@@ -1,26 +1,163 @@
 @import "tailwindcss";
 
+/* Chrome: warm cream and warm black. Contrast ≥ 4.5:1 (WCAG AA). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base chrome colors */
+  --background: #f7f5f0;
+  --text: #51514D; /* body, paragraphs — lighter gray */
+  --heading: #1a1a18; /* headings — dark */
+  --foreground: var(--heading); /* UI (focus ring, primary button) uses same dark as headings */
+  /* Semantic tokens (standardize borders, overlays, focus) */
+  --border-subtle: #e0ded9; /* very gentle warm silver */
+  --surface-overlay: rgba(255, 255, 255, 0.7);
+  /* Typescale: display + 3 headings + 1 body. Gambarino only. */
+  --text-display: clamp(3rem, 18vw, 16rem); /* 48px–256px, scales with viewport */
+  --text-heading-1: 6rem;
+  --text-heading-2: 4rem;
+  --text-heading-3: 2.5rem;
+  --text-body: 1.25rem; /* 20px — body, links, buttons */
+  --text-body-sm: 1rem; /* 16px — smaller body, captions, secondary text */
+  --leading-display: 1;
+  --leading-tight: 1.15;
+  --leading-body: 1.6;
+  /* Legacy aliases (map to new names) */
+  --text-heading-xl: var(--text-heading-1);
+  --text-heading-lg: var(--text-heading-2);
+  --text-heading-md: var(--text-heading-3);
+  --text-small: 1rem; /* 16px */
+  --tracking-heading-2: -0.03em; /* tight for H2 */
+  --tracking-body: -0.025em; /* tracking-tight for body (Figtree) */
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-text: var(--text);
+  --color-heading: var(--heading);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-border-subtle: var(--border-subtle);
+  --color-surface-overlay: var(--surface-overlay);
+  --font-sans: var(--font-figtree);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-serif);
 }
 
 body {
+  position: relative;
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  font-family: var(--font-figtree), sans-serif;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings and display: Gambarino */
+h1, h2, h3 {
+  font-family: var(--font-serif), Georgia, serif;
+  color: var(--heading);
+}
+h2 {
+  font-size: var(--text-heading-2);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-heading-2);
+}
+h3 {
+  font-size: var(--text-heading-3);
+  line-height: var(--leading-tight);
+}
+h1 {
+  font-size: var(--text-heading-1);
+  line-height: var(--leading-tight);
+}
+/* Ensure headings inside buttons (e.g. start page cards) stay dark and large */
+button h1,
+button h2,
+button h3 {
+  color: var(--heading);
+}
+button h1 {
+  font-size: var(--text-heading-1);
+  line-height: var(--leading-tight);
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+/* Body and small text utilities (Figtree + tracking-tight) */
+.text-body {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+}
+.text-small {
+  font-size: var(--text-small);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+}
+
+/* Link with body text + dashed underline (button-label weight) */
+a.link-h2,
+.link-h2 {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  font-weight: 500;
+  color: inherit;
+  text-decoration: underline dashed !important;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.15em;
+}
+a.link-h2:hover,
+a.link-h2:focus-visible,
+.link-h2:hover,
+.link-h2:focus-visible {
+  text-decoration-style: solid !important;
+}
+
+/* Barely-there grain on app chrome only. Static, low opacity; does not reduce text legibility. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' result='t'/%3E%3CfeColorMatrix in='t' type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.035;
+}
+
+/* Keyboard-focusable canvas (paint, weaving): focus ring only for keyboard users */
+.focusable-canvas.keyboard-modality canvas:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 2px;
+}
+/* Weaving: dashed row/column bar is the focus indicator — no outline ever */
+.focusable-canvas.hide-focus-ring canvas:focus,
+.focusable-canvas.hide-focus-ring canvas:focus-visible {
+  outline: none !important;
+}
+
+/* Gentle page enter: used by home/start for a soft settle (opacity + slight Y). Slower, softer easing. Respects reduced-motion via media query below. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.page-enter {
+  animation: page-enter 560ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+/* Reduced motion: suppress all animations and transitions */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
