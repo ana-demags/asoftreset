@@ -14,7 +14,7 @@ export default function AboutPage() {
         <div className="w-full max-w-2xl flex flex-col page-enter">
 
           <h1
-            className="mb-12"
+            className="mb-8"
             style={{
               fontSize: 'var(--text-heading-1)',
               lineHeight: 'var(--leading-display)',
