@@ -412,7 +412,7 @@ export default function BreathePage() {
                 lineHeight: 'var(--leading-body)',
               }}
             >
-            Set some time aside to pause.
+            A moment of calm is just one minute away.
             </p>
           </div>
         </header>
