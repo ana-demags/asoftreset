@@ -15,7 +15,7 @@
   --text-heading-1: clamp(3rem, 8vw, 6rem); /* 48px–96px */
   --text-heading-2: clamp(2.5rem, 5.5vw, 4rem); /* 40px–64px */
   --text-heading-3: clamp(2rem, 3.5vw, 2.5rem); /* 32px–40px */
-  --text-body: 1.25rem; /* 20px — body, links, buttons */
+  --text-body: 1.125rem; /* 18px on small screens — body, links, buttons */
   --text-body-sm: 1rem; /* 16px — smaller body, captions, secondary text */
   --leading-display: 1;
   --leading-tight: 1.15;
@@ -33,6 +33,7 @@
 @media (min-width: 640px) {
   :root {
     --card-padding: 2.5rem; /* 40px on desktop */
+    --text-body: 1.25rem; /* 20px — body, links, buttons */
   }
 }
 
@@ -165,7 +166,470 @@ body::before {
   }
 }
 .page-enter {
-  animation: page-enter 560ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
+  animation: page-enter 700ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+/* Home h1: subtle slow breath (letter-spacing, one cycle). Card is content-sized so it expands with the title. */
+:root {
+  --home-breath-peak: 0.02em;
+}
+@keyframes home-breath-subtle {
+  0%,
+  100% {
+    letter-spacing: -0.032em;
+  }
+  50% {
+    letter-spacing: var(--home-breath-peak);
+  }
+}
+.h1-home-breath-subtle {
+  animation: home-breath-subtle 5s ease-in-out forwards;
+}
+
+/* Production: Breathe h1 letter-by-letter reveal (used on /breathe) */
+@keyframes breathe-letter-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.h1-breathe-letter {
+  display: inline-block;
+  opacity: 0;
+  animation: breathe-letter-in 0.35s ease-out forwards;
+}
+
+/* Production: Compose h1 letters from sides (used on /compose) */
+@keyframes compose-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-0.4em);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes compose-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(0.4em);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.h1-compose-letter-left {
+  display: inline-block;
+  opacity: 0;
+  animation: compose-from-left 0.7s ease-out forwards;
+}
+.h1-compose-letter-right {
+  display: inline-block;
+  opacity: 0;
+  animation: compose-from-right 0.7s ease-out forwards;
+}
+
+/* ——— Demo page: H1 animation ideas (Reset-themed, calm) ——— */
+@keyframes demo-fade-settle {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.demo-h1-fade-settle {
+  animation: demo-fade-settle 1.8s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+@keyframes demo-breath-spacing {
+  0%, 100% { letter-spacing: -0.032em; }
+  50% { letter-spacing: 0.04em; }
+}
+.demo-h1-breath-spacing {
+  animation: demo-breath-spacing 6s ease-in-out infinite;
+}
+
+@keyframes demo-exhale-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+.demo-h1-exhale-scale {
+  animation: demo-exhale-scale 5s ease-in-out infinite;
+}
+
+@keyframes demo-mist-clear {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+.demo-h1-mist-clear {
+  animation: demo-mist-clear 2.2s ease-out forwards;
+}
+
+@keyframes demo-letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.demo-h1-letter-in span {
+  display: inline-block;
+  opacity: 0;
+  animation: demo-letter-in 0.6s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+@keyframes demo-drift-settle {
+  from { transform: translateX(-0.15em); }
+  to { transform: translateX(0); }
+}
+.demo-h1-drift-settle {
+  animation: demo-drift-settle 2s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+@keyframes demo-reset-breathe {
+  0%, 100% {
+    letter-spacing: -0.032em;
+    opacity: 0.92;
+  }
+  50% {
+    letter-spacing: 0.03em;
+    opacity: 1;
+  }
+}
+.demo-h1-reset-breathe {
+  animation: demo-reset-breathe 8s ease-in-out infinite;
+}
+
+/* ——— Demo: "Resetting" text ideas ——— */
+/* Ellipsis cycle: . → .. → ... → . (each dot fades in then out in sequence) */
+@keyframes demo-resetting-dot1 {
+  0%, 25% { opacity: 1; }
+  25.01%, 75% { opacity: 0; }
+  75.01%, 100% { opacity: 1; }
+}
+@keyframes demo-resetting-dot2 {
+  0%, 25% { opacity: 0; }
+  25.01%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+@keyframes demo-resetting-dot3 {
+  0%, 50% { opacity: 0; }
+  50.01%, 75% { opacity: 1; }
+  75.01%, 100% { opacity: 0; }
+}
+.demo-resetting-dots span {
+  animation-duration: 4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.demo-resetting-dots .dot1 { animation-name: demo-resetting-dot1; }
+.demo-resetting-dots .dot2 { animation-name: demo-resetting-dot2; }
+.demo-resetting-dots .dot3 { animation-name: demo-resetting-dot3; }
+
+@keyframes demo-cursor-blink {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.demo-resetting-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 0.08em;
+  height: 0.9em;
+  margin-left: 0.06em;
+  background: var(--heading);
+  vertical-align: -0.05em;
+  animation: demo-cursor-blink 2.4s ease-in-out infinite;
+}
+
+@keyframes demo-blur-to-sharp {
+  from {
+    opacity: 0.7;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+.demo-resetting-blur {
+  animation: demo-blur-to-sharp 2.5s ease-out forwards;
+}
+
+@keyframes demo-resetting-letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.demo-resetting-letter-in span {
+  display: inline-block;
+  opacity: 0;
+  animation: demo-resetting-letter-in 0.5s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+/* Resetting word: slightly smaller than full display for variety in demo */
+.demo-resetting-word {
+  font-size: clamp(2.5rem, 12vw, 8rem);
+  line-height: var(--leading-display);
+  letter-spacing: -0.032em;
+  font-weight: 400;
+}
+
+/* ——— Demo: "Starting over" / "Undoing" (hint at reset) ——— */
+.demo-starting-over-word {
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: -0.032em;
+  font-weight: 400;
+}
+
+/* Crossfade: "a soft reset" ↔ "starting over" (slow cycle) */
+@keyframes demo-crossfade-line1 {
+  0%, 42% { opacity: 1; }
+  50%, 92% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes demo-crossfade-line2 {
+  0%, 42% { opacity: 0; }
+  50%, 92% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.demo-starting-over-crossfade {
+  position: relative;
+  min-height: 1.2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.demo-starting-over-crossfade .line {
+  position: absolute;
+  white-space: nowrap;
+  animation-duration: 10s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.demo-starting-over-crossfade .line1 { animation-name: demo-crossfade-line1; }
+.demo-starting-over-crossfade .line2 { animation-name: demo-crossfade-line2; }
+
+/* Rewind-in: letters of "starting over" appear last-to-first (undo into place) */
+@keyframes demo-rewind-letter-in {
+  from {
+    opacity: 0;
+    transform: translateX(0.12em);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.demo-starting-over-rewind span {
+  display: inline-block;
+  opacity: 0;
+  animation: demo-rewind-letter-in 0.55s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+/* "starting over" gentle fade-in settle (one-shot) */
+@keyframes demo-starting-over-settle {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.demo-starting-over-settle {
+  animation: demo-starting-over-settle 2s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+/* "undoing" soft pulse (hint of coming back) */
+@keyframes demo-undoing-pulse {
+  0%, 100% { opacity: 0.88; }
+  50% { opacity: 1; }
+}
+.demo-undoing-pulse {
+  animation: demo-undoing-pulse 5s ease-in-out infinite;
+}
+
+/* ——— Demo: Breathe card rest → exercise transitions ——— */
+.demo-breathe-layer-rest,
+.demo-breathe-layer-exercise {
+  position: relative;
+  padding-top: 2.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.demo-breathe-layer-exercise {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.demo-breathe-layer-rest,
+.demo-breathe-layer-exercise {
+  transition:
+    opacity 350ms cubic-bezier(0.33, 1, 0.68, 1),
+    transform 350ms cubic-bezier(0.33, 1, 0.68, 1),
+    filter 350ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* Base: simple crossfade; variants override transforms/blur as needed */
+[data-state='rest'] .demo-breathe-layer-rest {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+[data-state='rest'] .demo-breathe-layer-exercise {
+  opacity: 0;
+  transform: translateY(4px);
+}
+[data-state='exercise'] .demo-breathe-layer-rest {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+[data-state='exercise'] .demo-breathe-layer-exercise {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* 1. Soft dissolve & lift */
+.demo-breathe-soft-dissolve {
+  transition:
+    box-shadow 400ms cubic-bezier(0.33, 1, 0.68, 1),
+    transform 400ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+.demo-breathe-soft-dissolve[data-state='exercise'] {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+}
+
+/* For soft dissolve: no vertical slide, stronger blur-out on rest */
+.demo-breathe-soft-dissolve .demo-breathe-layer-rest,
+.demo-breathe-soft-dissolve .demo-breathe-layer-exercise {
+  transform: translateY(0);
+}
+.demo-breathe-soft-dissolve[data-state='rest'] .demo-breathe-layer-rest {
+  opacity: 1;
+  filter: blur(0);
+}
+.demo-breathe-soft-dissolve[data-state='rest'] .demo-breathe-layer-exercise {
+  opacity: 0;
+}
+.demo-breathe-soft-dissolve[data-state='exercise'] .demo-breathe-layer-rest {
+  opacity: 0;
+  filter: blur(4px);
+}
+.demo-breathe-soft-dissolve[data-state='exercise'] .demo-breathe-layer-exercise {
+  opacity: 1;
+}
+
+/* 2. Header slide & crossfade */
+.demo-breathe-header-slide .demo-breathe-layer-rest nav {
+  transition:
+    transform 350ms cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 350ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+.demo-breathe-header-slide[data-state='exercise'] .demo-breathe-layer-rest nav {
+  transform: translateY(-12px);
+  opacity: 0;
+}
+
+/* Stronger vertical motion between layers for header-slide variant */
+.demo-breathe-header-slide[data-state='rest'] .demo-breathe-layer-rest {
+  transform: translateY(0);
+}
+.demo-breathe-header-slide[data-state='exercise'] .demo-breathe-layer-rest {
+  transform: translateY(-16px);
+}
+.demo-breathe-header-slide[data-state='rest'] .demo-breathe-layer-exercise {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.demo-breathe-header-slide[data-state='exercise'] .demo-breathe-layer-exercise {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 3. Mist transition */
+.demo-breathe-mist {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.8), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+.demo-breathe-mist-transition[data-state='exercise'] .demo-breathe-mist {
+  animation: demo-breathe-mist-pulse 320ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+@keyframes demo-breathe-mist-pulse {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 4. Micro inhale on the card */
+.demo-breathe-micro-inhale {
+  transition:
+    transform 420ms cubic-bezier(0.33, 1, 0.68, 1),
+    box-shadow 420ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+.demo-breathe-micro-inhale[data-state='exercise'] {
+  transform: scale(1.02);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.07);
+}
+
+/* Production: Breathe card micro-inhale (same feel as demo variant 4) */
+.breathe-card-micro-inhale {
+  transition:
+    transform 420ms cubic-bezier(0.33, 1, 0.68, 1),
+    box-shadow 420ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+.breathe-card-micro-inhale-active {
+  transform: scale(1.02);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.07);
+}
+
+/* Breathe guide text: gentle fade-in when phases change */
+@keyframes breathe-guide-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+}
+.breathe-guide-fade {
+  opacity: 0;
+  animation: breathe-guide-fade-in 700ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
 }
 
 /* Reduced motion: suppress all animations and transitions */

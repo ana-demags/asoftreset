@@ -42,41 +42,55 @@ export default function ComposeSetupPage() {
       className="min-h-screen flex flex-col relative z-[1] min-w-0"
       style={{ backgroundColor: 'var(--background)', color: 'var(--text)' }}
     >
-      <Breadcrumb
-        items={[
-          { label: 'home', href: '/' },
-          { label: 'start', href: '/start' },
-          { label: 'compose', href: '/compose' },
-        ]}
-        className="px-4 sm:px-6 pt-6 pb-2"
-      />
-      <div
-        className="flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-start lg:justify-center gap-8 lg:gap-32 px-4 sm:px-6 pt-4 pb-6 sm:py-8 overflow-auto"
-      >
-        <header
+      <div className="flex flex-col flex-1 min-h-0 page-enter">
+        <Breadcrumb
+          items={[
+            { label: 'home', href: '/' },
+            { label: 'start', href: '/start' },
+            { label: 'compose', href: '/compose' },
+          ]}
+          className="px-4 sm:px-6 pt-6 pb-4"
+        />
+        <div
+          className="flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-start lg:justify-center gap-6 lg:gap-32 px-4 sm:px-6 pt-8 pb-6 sm:py-8 overflow-auto"
+        >
+          <header
           className="flex flex-col w-full max-w-lg lg:max-w-[24rem] lg:min-w-0 lg:shrink text-center lg:text-left"
         >
-          <div className="flex flex-col gap-4">
-            <h1>Compose</h1>
+          <div className="flex flex-col gap-2">
+            <h1 className="min-h-[1.2em]" aria-label="Compose">
+              {'Compose'.split('').map((char, i) => (
+                <span
+                  key={i}
+                  className={
+                    i % 2 === 0
+                      ? 'h1-compose-letter-left'
+                      : 'h1-compose-letter-right'
+                  }
+                  style={{ animationDelay: `${i * 70}ms` }}
+                >
+                  {char}
+                </span>
+              ))}
+            </h1>
             <p className="text-body w-full max-w-lg mx-auto lg:mx-0 min-w-0">
               Take a moment to create without pressure.
             </p>
           </div>
-        </header>
-        <div
-          className="rounded-2xl p-6 sm:p-10 flex flex-col items-center w-full max-w-[24rem] min-w-0 lg:w-[24rem] lg:min-w-[24rem] lg:max-w-[24rem] lg:shrink-0 box-border text-center shadow-sm"
-          style={{
-            backgroundColor: 'var(--surface-overlay)',
-            color: 'var(--text)',
-          }}
-        >
-          <div
-            className="relative w-full min-h-[calc(2rem+0.75rem+19rem)] flex flex-col items-center gap-0"
-          >
-            <StylePicker selected={style} onSelect={setStyle} />
-
-            <div className="flex flex-col gap-3 items-center text-center min-w-0 flex-1 justify-center min-h-0 py-8">
-              <div key={style} className="flex flex-col gap-3 items-center text-center min-w-0 page-enter">
+          </header>
+          <div className="w-full max-w-[24rem] sm:w-[24rem] sm:min-w-[24rem] lg:w-[24rem] lg:min-w-[24rem] lg:max-w-[24rem] shrink-0 flex flex-col items-center">
+            <div
+              className="rounded-2xl p-8 sm:p-10 w-full box-border text-center shadow-sm shrink-0 flex flex-col items-center gap-13 sm:gap-8"
+              style={{
+                backgroundColor: 'var(--surface-overlay)',
+                color: 'var(--text)',
+              }}
+            >
+              {/* Mobile: hug. sm+: keep spacing with gap. No fixed height. */}
+              <div className="flex flex-col items-center w-full min-w-0 shrink-0">
+                <StylePicker selected={style} onSelect={setStyle} />
+              </div>
+              <div key={style} className="flex flex-col gap-3 items-center text-center min-w-0 shrink-0 mt-8 mb-8 sm:mt-12 sm:mb-12">
                 <h3 className="break-words">
                   {COMPOSE_STYLES[style].label}
                 </h3>
@@ -84,13 +98,12 @@ export default function ComposeSetupPage() {
                   {COMPOSE_STYLES[style].description}
                 </p>
               </div>
+              <div className="flex flex-col gap-3 w-full min-w-0 shrink-0">
+                <Button onClick={saveAndStart} className="w-full">
+                  Start
+                </Button>
+              </div>
             </div>
-          </div>
-
-          <div className="flex flex-col gap-3 w-full min-w-0">
-            <Button onClick={saveAndStart} className="w-full">
-              Start
-            </Button>
           </div>
         </div>
       </div>

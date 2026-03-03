@@ -60,7 +60,7 @@ export default function BreathePage() {
 
   const SESSION_DURATION_SEC = 60;
 
-  // One layout (card always right in DOM); slide via transform only. No reflow = no bounce.
+  // One layout (card always right in DOM); slide via transform only (desktop). Small screens use full-screen view instead.
   const TRANSITION_DURATION = 0.8;
   const STAGGER_DELAY_MS = 200;
   const EASING = 'cubic-bezier(0.22, 1, 0.36, 1)';
@@ -71,8 +71,9 @@ export default function BreathePage() {
     setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }, []);
 
+  // Match Tailwind lg (1024px): below 1025px use small-screen behavior (full-screen exercise) to avoid card stuck top-right at 1024px.
   useEffect(() => {
-    const mql = window.matchMedia('(max-width: 1023px)');
+    const mql = window.matchMedia('(max-width: 1024px)');
     const handler = () => setIsSmallScreen(mql.matches);
     handler();
     mql.addEventListener('change', handler);
@@ -146,15 +147,20 @@ export default function BreathePage() {
       enterSlideTargetRef.current = { ...slideOffsetRef.current };
     } else {
       const wrapper = cardWrapperRef.current;
-      if (wrapper) {
+      if (wrapper && !isSmallScreen) {
+        const PAD = 16;
         const rect = wrapper.getBoundingClientRect();
         const cardCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
         const vpCenter = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-        if (isSmallScreen) {
-          enterSlideTargetRef.current = { x: vpCenter.x - cardCenter.x, y: vpCenter.y - cardCenter.y };
-        } else {
-          enterSlideTargetRef.current = { x: vpCenter.x - cardCenter.x, y: 0 };
-        }
+        let offsetY = vpCenter.y - cardCenter.y;
+        const layoutTop = rect.top; // no transform yet at start
+        const minOffsetY = PAD - layoutTop;
+        const maxOffsetY = window.innerHeight - PAD - rect.height - layoutTop;
+        offsetY = Math.max(minOffsetY, Math.min(maxOffsetY, offsetY));
+        enterSlideTargetRef.current = {
+          x: vpCenter.x - cardCenter.x,
+          y: offsetY,
+        };
       }
     }
     phaseIdxRef.current = 0;
@@ -167,11 +173,13 @@ export default function BreathePage() {
     setCompleted(false);
     setDisplay(computeDisplay(0, 0, modeRef.current, 0));
     setExerciseVisible(false);
-    // Show sphere + start breathing shortly after the card is fully centered (~30ms); when restarting, card is already centered
+    // Small: show exercise almost immediately (full-screen, no slide). Desktop: after card slide finishes.
     const showExerciseMs = 30;
     const slideStartDelayMs = isSmallScreen ? 0 : STAGGER_DELAY_MS;
     const slideDurationMs = TRANSITION_DURATION * 1000;
-    const delayMs = keepPosition ? showExerciseMs : slideStartDelayMs + slideDurationMs + showExerciseMs;
+    const delayMs = isSmallScreen
+      ? showExerciseMs
+      : keepPosition ? showExerciseMs : slideStartDelayMs + slideDurationMs + showExerciseMs;
     if (exerciseStartTimeoutRef.current) clearTimeout(exerciseStartTimeoutRef.current);
     exerciseStartTimeoutRef.current = setTimeout(() => {
       exerciseStartTimeoutRef.current = null;
@@ -208,15 +216,17 @@ export default function BreathePage() {
   }
 
   useLayoutEffect(() => {
-    if (running) {
+    // Desktop: when exercise starts/runs, slide the card to its target position.
+    if (running && !isSmallScreen) {
       const target = enterSlideTargetRef.current;
-      const slideStartDelayMs = isSmallScreen ? TRANSITION_DURATION * 20 : STAGGER_DELAY_MS;
-      const t = setTimeout(() => setSlideOffset(target), slideStartDelayMs);
+      const t = setTimeout(() => setSlideOffset(target), STAGGER_DELAY_MS);
       return () => clearTimeout(t);
     }
-    setExerciseVisible(false);
-    // Only slide card back when user stops; keep centered when session completes ("Nice work")
-    if (!completed) {
+
+    // When we're back in the rest state (not running and not completed),
+    // reset layout state so the card returns to its default position.
+    if (!running && !completed) {
+      setExerciseVisible(false);
       isResizingRef.current = false;
       setIsResizing(false);
       setSlideOffset({ x: 0, y: 0 });
@@ -231,13 +241,15 @@ export default function BreathePage() {
     };
   }, []);
 
-  // Recompute card position on resize when in exercise so layout adapts (e.g. desktop → narrow).
-  // Disable card transition during resize so it snaps instead of bouncing.
+  // Center card on desktop when exercise is running/completed, and recompute on resize.
+  // When resizing from small → large, isSmallScreen flips so this effect re-runs and centers the card.
   useEffect(() => {
     if (!running && !completed) return;
+    if (isSmallScreen) return; // small screens use full-screen view; no card to center
     const wrapper = cardWrapperRef.current;
     if (!wrapper) return;
 
+    const PAD = 16; // keep card (including Stop button) within viewport with this margin
     const recomputeCenter = () => {
       if (!isResizingRef.current) {
         isResizingRef.current = true;
@@ -246,16 +258,14 @@ export default function BreathePage() {
       const rect = wrapper.getBoundingClientRect();
       const currentCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
       const vpCenter = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-      const small = window.matchMedia('(max-width: 1023px)').matches;
-      const newOffset = small
-        ? {
-            x: slideOffsetRef.current.x + (vpCenter.x - currentCenter.x),
-            y: slideOffsetRef.current.y + (vpCenter.y - currentCenter.y),
-          }
-        : {
-            x: slideOffsetRef.current.x + (vpCenter.x - currentCenter.x),
-            y: 0,
-          };
+      let offsetX = slideOffsetRef.current.x + (vpCenter.x - currentCenter.x);
+      let offsetY = slideOffsetRef.current.y + (vpCenter.y - currentCenter.y);
+      // Clamp Y so the full card (including Stop button) stays in view when resizing
+      const layoutTop = rect.top - slideOffsetRef.current.y;
+      const minOffsetY = PAD - layoutTop;
+      const maxOffsetY = window.innerHeight - PAD - rect.height - layoutTop;
+      offsetY = Math.max(minOffsetY, Math.min(maxOffsetY, offsetY));
+      const newOffset = { x: offsetX, y: offsetY };
       enterSlideTargetRef.current = newOffset;
       setSlideOffset(newOffset);
 
@@ -267,39 +277,121 @@ export default function BreathePage() {
       }, 150);
     };
 
+    // Center immediately when effect runs (e.g. after resize small → large so card is in DOM)
+    const raf = requestAnimationFrame(() => {
+      if (cardWrapperRef.current) recomputeCenter();
+    });
     window.addEventListener('resize', recomputeCenter);
     return () => {
+      cancelAnimationFrame(raf);
       window.removeEventListener('resize', recomputeCenter);
       if (resizeDebounceRef.current) clearTimeout(resizeDebounceRef.current);
     };
-  }, [running, completed]);
+  }, [running, completed, isSmallScreen]);
 
   const immersive = running || completed;
+  const guideText = guideTextForPhase(display.label);
+  const smallScreenFullScreen = isSmallScreen && (running || completed);
 
   return (
     <main
       className="min-h-screen flex flex-col relative z-[1] min-w-0"
       style={{ backgroundColor: 'var(--background)', color: 'var(--text)' }}
     >
-      <div
-        className="relative z-[1] shrink-0 px-4 sm:px-6 pt-6 pb-2"
-        style={{
+      {/* Small screens: full-screen exercise view (no card) when running or completed */}
+      {smallScreenFullScreen && (
+        <div
+          className="fixed inset-0 z-10 flex flex-col items-center justify-center gap-6 p-6"
+          style={{
+            backgroundColor: 'var(--background)',
+            transition: reducedMotion ? 'none' : `opacity ${EXERCISE_FADE_DURATION}s ${EASING}`,
+          }}
+        >
+          {completed ? (
+            <>
+              <div className="flex flex-col gap-3 items-center text-center max-w-[24rem]">
+                <h2
+                  className="break-words"
+                  style={{
+                    fontFamily: 'var(--font-serif), Georgia, serif',
+                    fontSize: 'var(--text-heading-3)',
+                    lineHeight: 'var(--leading-tight)',
+                  }}
+                >
+                  Nice work
+                </h2>
+                <p
+                  className="min-w-0 break-words max-w-full"
+                  style={{
+                    fontSize: 'var(--text-body)',
+                    lineHeight: 'var(--leading-body)',
+                  }}
+                >
+                  You carved out a small moment to pause and be kind to yourself. That's no small thing.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 w-full max-w-[24rem]">
+                <Button onClick={restart}>Restart</Button>
+                <Button variant="secondary" onClick={stop} className="w-full">
+                  Finish
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className="min-h-[2rem] flex items-center justify-center"
+                style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--leading-body)' }}
+              >
+                <span
+                  key={display.label}
+                  className={reducedMotion ? undefined : 'breathe-guide-fade'}
+                  style={{ color: 'var(--text)', opacity: reducedMotion ? 0.9 : undefined }}
+                >
+                  {guideText}
+                </span>
+              </div>
+              <SoftBlobSphere
+                scale={display.scale}
+                reducedMotion={reducedMotion}
+                sessionProgress={display.sessionProgress}
+              />
+              <div
+                className="w-full max-w-[24rem]"
+                style={{
+                  opacity: 1,
+                  transition: reducedMotion ? 'none' : `opacity ${EXERCISE_FADE_DURATION}s ${EASING}`,
+                }}
+              >
+                <Button variant="secondary" onClick={stop} className="w-full">
+                  Stop
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      <div className="flex flex-col flex-1 min-h-0 page-enter">
+        <div
+          className="relative z-[1] shrink-0 px-4 sm:px-6 pt-6 pb-4"
+          style={{
           opacity: immersive ? 0 : 1,
           visibility: immersive ? 'hidden' : 'visible',
           transition: reducedMotion ? 'none' : `opacity ${TRANSITION_DURATION}s ${EASING}`,
-        }}
-        aria-hidden={immersive}
-      >
-        <Breadcrumb
+          }}
+          aria-hidden={immersive}
+        >
+          <Breadcrumb
           items={[
             { label: 'home', href: '/' },
             { label: 'start', href: '/start' },
             { label: 'breathe', href: '/breathe' },
           ]}
-        />
-      </div>
-      <div className="relative z-[1] flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-start lg:justify-center gap-8 lg:gap-32 px-4 sm:px-6 pt-4 pb-6 sm:py-8 overflow-auto">
-        <header
+          />
+        </div>
+        <div className="relative z-[1] flex-1 min-h-0 flex flex-col lg:flex-row items-center justify-start lg:justify-center gap-6 lg:gap-32 px-4 sm:px-6 pt-8 pb-6 sm:py-8 overflow-auto">
+          <header
           className="flex flex-col w-full max-w-lg lg:max-w-[24rem] lg:min-w-0 lg:shrink text-center lg:text-left"
           style={{
             opacity: immersive ? 0 : 1,
@@ -309,8 +401,10 @@ export default function BreathePage() {
           }}
           aria-hidden={immersive}
         >
-          <div className="flex flex-col gap-4">
-            <h1>Breathe</h1>
+          <div className="flex flex-col gap-2">
+            <h1 className="h1-home-breath-subtle min-h-[1.2em]" aria-label="Breathe">
+              Breathe
+            </h1>
             <p
               className="w-full max-w-lg mx-auto lg:mx-0 min-w-0 text-body"
               style={{
@@ -318,14 +412,15 @@ export default function BreathePage() {
                 lineHeight: 'var(--leading-body)',
               }}
             >
-              One minute to find your way back to calm.
+            Set some time aside to pause.
             </p>
           </div>
         </header>
+        {!smallScreenFullScreen && (
         <div
           ref={cardWrapperRef}
           className="w-full max-w-[24rem] min-w-0 lg:w-[24rem] lg:min-w-[24rem] lg:max-w-[24rem] lg:shrink-0 flex flex-col items-center"
-            style={{
+          style={{
             transform:
               slideOffset.x !== 0 || slideOffset.y !== 0
                 ? `translate(${slideOffset.x}px, ${slideOffset.y}px)`
@@ -335,19 +430,22 @@ export default function BreathePage() {
           }}
         >
           <div
-            className="rounded-2xl p-6 sm:p-10 flex flex-col items-center gap-6 w-full min-w-0 box-border text-center shadow-sm"
+            className={`rounded-2xl p-8 sm:p-10 flex flex-col items-center gap-13 sm:gap-8 w-full min-w-0 box-border text-center shadow-sm shrink-0 breathe-card-micro-inhale ${
+              !reducedMotion && (running || completed) ? 'breathe-card-micro-inhale-active' : ''
+            }`}
             style={{
               backgroundColor: 'var(--surface-overlay)',
               color: 'var(--text)',
             }}
           >
+          {/* Mobile: hug (min-h-0, height from content). sm + running/completed: fixed height for sphere. */}
           <div
-            className="relative w-full h-[calc(2rem+0.75rem+19rem)] min-h-0 shrink-0"
+            className={`relative w-full min-h-0 shrink-0 ${running || completed ? 'min-h-[calc(2rem+0.75rem+19rem)]' : ''} sm:h-[calc(2rem+0.75rem+19rem)] sm:min-h-0`}
             aria-hidden={running || completed}
           >
-            {/* Rest state: tabs hidden when running; exercise name + description stay until breathing fades in */}
+            {/* Rest state: on mobile in-flow with gap so card hugs; on sm absolute overlay */}
             <div
-              className="absolute inset-0 flex flex-col items-center"
+              className="relative flex flex-col items-center gap-13 sm:absolute sm:inset-0 sm:gap-0"
               style={{
                 pointerEvents: !running && !completed ? 'auto' : 'none',
               }}
@@ -374,7 +472,7 @@ export default function BreathePage() {
                 ))}
               </nav>
               <div
-                className="flex-1 flex items-center justify-center min-h-0 w-full"
+                className="flex items-center justify-center min-h-0 w-full sm:flex-1"
                 style={{
                   opacity: completed ? 0 : (running && exerciseVisible ? 0 : 1),
                   transition: reducedMotion || !running ? 'none' : `opacity ${EXERCISE_FADE_DURATION}s ${EASING}`,
@@ -419,8 +517,12 @@ export default function BreathePage() {
                 className="min-h-[2rem] flex items-center justify-center"
                 style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--leading-body)' }}
               >
-                <span style={{ color: 'var(--text)', opacity: 0.9 }}>
-                  {guideTextForPhase(display.label)}
+                <span
+                  key={display.label}
+                  className={reducedMotion ? undefined : 'breathe-guide-fade'}
+                  style={{ color: 'var(--text)', opacity: reducedMotion ? 0.9 : undefined }}
+                >
+                  {guideText}
                 </span>
               </div>
               <SoftBlobSphere
@@ -465,7 +567,7 @@ export default function BreathePage() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 w-full min-w-0">
+          <div className="flex flex-col gap-3 w-full min-w-0 shrink-0">
             {completed ? (
               <>
                 <Button onClick={restart}>Restart</Button>
@@ -491,6 +593,8 @@ export default function BreathePage() {
             )}
           </div>
           </div>
+        </div>
+        )}
         </div>
       </div>
     </main>

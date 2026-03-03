@@ -18,14 +18,24 @@ export default function StartPage() {
       />
       <div className="flex-1 flex items-start sm:items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
         <div className="w-full max-w-md lg:max-w-none flex flex-col gap-6 lg:gap-10 items-center page-enter">
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 justify-center items-center">
-          <Button variant="card" onClick={() => router.push('/breathe')}>
+          <h1
+            className="text-center mb-2"
+            style={{
+              fontFamily: 'var(--font-serif), Georgia, serif',
+              fontSize: 'var(--text-heading-2)',
+              lineHeight: 'var(--leading-tight)',
+            }}
+          >
+            Choose your path
+          </h1>
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 justify-center items-center">
+            <Button variant="card" onClick={() => router.push('/breathe')}>
             <div className="flex flex-col gap-3 w-full text-left">
               <h2
                 className="whitespace-nowrap"
                 style={{
                   fontFamily: 'var(--font-serif), Georgia, serif',
-                  fontSize: 'var(--text-heading-2)',
+                  fontSize: 'var(--text-heading-3)',
                   lineHeight: 'var(--leading-tight)',
                 }}
               >
@@ -35,14 +45,14 @@ export default function StartPage() {
                 A guided breathing practice to slow down and recenter.
               </p>
             </div>
-          </Button>
-          <Button variant="card" onClick={() => router.push('/compose')}>
+            </Button>
+            <Button variant="card" onClick={() => router.push('/compose')}>
             <div className="flex flex-col gap-3 w-full text-left">
               <h2
                 className="whitespace-nowrap"
                 style={{
                   fontFamily: 'var(--font-serif), Georgia, serif',
-                  fontSize: 'var(--text-heading-2)',
+                  fontSize: 'var(--text-heading-3)',
                   lineHeight: 'var(--leading-tight)',
                 }}
               >
@@ -52,9 +62,9 @@ export default function StartPage() {
                 A rule-free yet defined space to color, weave, and rest.
               </p>
             </div>
-          </Button>
+            </Button>
+          </div>
         </div>
-      </div>
       </div>
     </main>
   );
