@@ -34,7 +34,7 @@ export default function PuzzleSetupPage() {
 
   function saveAndStart() {
     localStorage.setItem('style', style);
-    router.push(style === 'weave' ? '/weaving' : '/puzzle/play');
+    router.push(style === 'weave' ? '/compose/weave' : '/puzzle/play');
   }
 
   return (

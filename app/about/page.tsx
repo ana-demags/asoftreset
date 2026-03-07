@@ -33,7 +33,7 @@ export default function AboutPage() {
 
           <div className="flex flex-col gap-1">
             <p style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--leading-body)' }}>With care,</p>
-            <p style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--leading-body)' }}>Ana De Magalhães</p>
+            <p style={{ fontSize: 'var(--text-body)', lineHeight: 'var(--leading-body)' }}>Ana</p>
           </div>
 
         </div>
